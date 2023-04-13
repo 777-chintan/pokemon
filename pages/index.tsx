@@ -2,20 +2,21 @@ import Head from "next/head";
 import { useQuery } from "@apollo/client";
 
 //react
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // mui
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, Button } from "@mui/material";
 
 // utils
 import { getPokemonsByPagination, POKEMON } from "@/apis/pokemon";
 
 // components
-import Loader from "@/components/Loader";
 import PokemonCard from "@/components/PokemonCard";
+import PokemonCardSkeleton from "@/components/PokemonCardSkeleton";
 
 export default function Home() {
   const [page, setPage] = useState<number>(1);
+  const [pokemons, setPokemons] = useState<POKEMON[]>([]);
   const {
     loading,
     data,
@@ -23,10 +24,15 @@ export default function Home() {
     loading: boolean;
     data: { pokemons: POKEMON[]; first: number };
   } = useQuery(getPokemonsByPagination, {
-    variables: { first: 20 },
+    variables: { first: page * 20 },
   });
 
-  console.log("first", data);
+  useEffect(() => {
+    if (!loading && data?.pokemons) {
+      setPokemons(data?.pokemons);
+    }
+  }, [loading, data]);
+
   return (
     <>
       <Head
@@ -37,15 +43,29 @@ export default function Home() {
         }
       ></Head>
       <Container maxWidth="lg">
+        <Grid container spacing={4}>
+          {pokemons?.map((pokemon: POKEMON, index) => (
+            <PokemonCard pokemon={pokemon} />
+          ))}
+        </Grid>
+
         {loading ? (
-          <>
-            <Loader />
-          </>
+          <Grid item xs={12} container>
+            <PokemonCardSkeleton />
+            <PokemonCardSkeleton />
+            <PokemonCardSkeleton />
+            <PokemonCardSkeleton />
+          </Grid>
         ) : (
-          <Grid container>
-            {data?.pokemons?.map((pokemon: POKEMON, index) => (
-              <PokemonCard pokemon={pokemon} />
-            ))}
+          <Grid item xs={12} display={"flex"} justifyContent={"center"}>
+            <Button
+              variant={"contained"}
+              onClick={() => {
+                setPage((prev) => prev + 1);
+              }}
+            >
+              Load More
+            </Button>
           </Grid>
         )}
       </Container>
