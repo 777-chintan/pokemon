@@ -56,7 +56,7 @@ const PokemonCard = ({ pokemon }: { pokemon: POKEMON }) => {
           </Grid>
           <Grid item container xs={12} sx={{ mb: 1, mr: 1 }} spacing={1}>
             {pokemon?.types?.map((t, index) => (
-              <Grid item xs={6}>
+              <Grid item xs={6} key={t + index}>
                 <Button
                   fullWidth
                   variant={"contained"}

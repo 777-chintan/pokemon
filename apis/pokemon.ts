@@ -23,6 +23,7 @@ export interface POKEMON {
   maxCP: number;
   maxHP: number;
   image: string;
+  evolutions: POKEMON[];
 }
 
 export const getPokemonsByPagination = gql`
@@ -73,6 +74,23 @@ export const getPokemonByIdorName = gql`
       maxCP
       maxHP
       image
+    }
+  }
+`;
+
+export const getEvaluations = gql`
+  query pokemon($id: String, $name: String) {
+    pokemon(id: $id, name: $name) {
+      id
+      name
+      evolutions {
+        id
+        number
+        name
+        fleeRate
+        maxCP
+        maxHP
+      }
     }
   }
 `;

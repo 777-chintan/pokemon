@@ -3,11 +3,26 @@ import Head from "next/head";
 import { useQuery } from "@apollo/client";
 
 //react
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // mui
-import { Container, Grid, Box, Typography, Button } from "@mui/material";
+import {
+  Container,
+  Grid,
+  Box,
+  Typography,
+  Button,
+  Tooltip,
+  Dialog,
+  Slide,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+} from "@mui/material";
+import { TransitionProps } from "@mui/material/transitions";
+
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import InfoIcon from "@mui/icons-material/Info";
 
 // utils
 import { POKEMON, getPokemonByIdorName } from "@/apis/pokemon";
@@ -16,12 +31,23 @@ import { POKEMON, getPokemonByIdorName } from "@/apis/pokemon";
 import Loader from "@/components/Loader";
 import Detail from "@/components/Pokemon/Detail";
 import ArrayDetails from "@/components/Pokemon/ArrayDetails";
+import Evalution from "@/components/Pokemon/Evalution";
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function Home() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [pokemon, setPokemon] = useState<POKEMON | null>(null);
   const [isEvalutionVisible, setIsEvalutionVisible] = useState<boolean>(false);
+  const handleClose = () => setIsEvalutionVisible((prev) => !prev);
   const {
     data,
   }: {
@@ -39,13 +65,9 @@ export default function Home() {
 
   return (
     <>
-      <Head
-        children={
-          <>
-            <title>{router?.query?.pokemon}</title>
-          </>
-        }
-      ></Head>
+      <Head>
+        <title>{router?.query?.pokemon}</title>
+      </Head>
 
       <Container maxWidth="lg">
         <Button variant="contained" onClick={() => router.back()}>
@@ -92,6 +114,13 @@ export default function Home() {
               </Box>
             </Grid>
             <Grid item xs={12} md={6} container>
+              <Grid item xs={12} sx={{ pb: 1 }}>
+                <Tooltip title="View Evaluation">
+                  <Button color="warning" onClick={handleClose}>
+                    View Evalution <InfoIcon />
+                  </Button>
+                </Tooltip>
+              </Grid>
               <Grid
                 item
                 xs={12}
@@ -129,6 +158,21 @@ export default function Home() {
             </Grid>
           </Grid>
         )}
+        <Dialog
+          open={isEvalutionVisible}
+          onClose={handleClose}
+          maxWidth="md"
+          fullWidth
+          TransitionComponent={Transition}
+        >
+          <DialogTitle>{`${pokemon?.name} Evalution`}</DialogTitle>
+          <DialogContent>
+            {pokemon && <Evalution pokemon={pokemon} />}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Close</Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </>
   );

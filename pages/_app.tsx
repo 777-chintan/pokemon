@@ -9,9 +9,8 @@ const client = new ApolloClient({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ApolloProvider
-      client={client}
-      children={<Component {...pageProps} />}
-    ></ApolloProvider>
+    <ApolloProvider client={client}>
+      <Component {...pageProps} />
+    </ApolloProvider>
   );
 }
