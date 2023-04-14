@@ -5,10 +5,27 @@ import { Grid, Box, Chip, Typography, Button } from "@mui/material";
 
 // utils
 import { POKEMON } from "@/apis/pokemon";
+import { useRouter } from "next/router";
 
 const PokemonCard = ({ pokemon }: { pokemon: POKEMON }) => {
+  const router = useRouter();
   return (
-    <Grid item xs={12} md={4} lg={3} key={pokemon?.id} sx={{ p: 2 }}>
+    <Grid
+      item
+      xs={12}
+      md={4}
+      lg={3}
+      key={pokemon?.id}
+      sx={{
+        p: 2,
+        cursor: "pointer",
+        transition: "ease-out 0.5s",
+        "&:hover": {
+          transform: "scale(1.05)",
+        },
+      }}
+      onClick={() => router.push(`${pokemon.name}`)}
+    >
       <Box
         sx={{
           border: "1px solid",
@@ -24,6 +41,7 @@ const PokemonCard = ({ pokemon }: { pokemon: POKEMON }) => {
           src={pokemon?.image}
           style={{
             height: "10rem",
+            width: "100%",
             padding: 2,
             objectFit: "contain",
           }}

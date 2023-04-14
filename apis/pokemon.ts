@@ -31,6 +31,32 @@ export const getPokemonsByPagination = gql`
       id
       number
       name
+      types
+      image
+    }
+  }
+`;
+// weight {
+//   minimum
+//   maximum
+// }
+// height {
+//   minimum
+//   maximum
+// }
+// classification
+// resistant
+// weaknesses
+// fleeRate
+// maxCP
+// maxHP
+
+export const getPokemonByIdorName = gql`
+  query pokemon($id: String, $name: String) {
+    pokemon(id: $id, name: $name) {
+      id
+      number
+      name
       weight {
         minimum
         maximum

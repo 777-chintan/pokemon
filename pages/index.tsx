@@ -21,17 +21,11 @@ export default function Home() {
     loading,
     data,
   }: {
-    loading: boolean;
     data: { pokemons: POKEMON[]; first: number };
   } = useQuery(getPokemonsByPagination, {
     variables: { first: page * 20 },
   });
 
-  useEffect(() => {
-    if (!loading && data?.pokemons) {
-      setPokemons(data?.pokemons);
-    }
-  }, [loading, data]);
 
   return (
     <>
@@ -44,19 +38,17 @@ export default function Home() {
       ></Head>
       <Container maxWidth="lg">
         <Grid container spacing={4}>
-          {pokemons?.map((pokemon: POKEMON, index) => (
+          {data?.pokemons?.map((pokemon: POKEMON, index) => (
             <PokemonCard pokemon={pokemon} />
           ))}
+
+          {loading && <PokemonCardSkeleton />}
+          {loading && <PokemonCardSkeleton />}
+          {loading && <PokemonCardSkeleton />}
+          {loading && <PokemonCardSkeleton />}
         </Grid>
 
-        {loading ? (
-          <Grid item xs={12} container>
-            <PokemonCardSkeleton />
-            <PokemonCardSkeleton />
-            <PokemonCardSkeleton />
-            <PokemonCardSkeleton />
-          </Grid>
-        ) : (
+        {!loading && (
           <Grid item xs={12} display={"flex"} justifyContent={"center"}>
             <Button
               variant={"contained"}

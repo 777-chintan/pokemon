@@ -5,13 +5,14 @@ import { Grid, Box, Skeleton } from "@mui/material";
 
 const PokemonCardSkeleton = () => {
   return (
-    <Grid item xs={12} md={4} lg={3} sx={{ p: 4 }}>
+    <Grid item xs={12} md={4} lg={3} sx={{ p: 2 }}>
       <Box
         sx={{
           border: "1px solid",
           borderRadius: 1,
           display: "flex",
           height: "17rem",
+          width: "100%",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "space-between",
